@@ -440,6 +440,10 @@ setMethod("termStat",
           signature(object = "topGOdata", whichGO = "character"),
           function(object, whichGO) {
 
+            if(length(whichGO) == 0) {
+		    return(data.frame(Annotated = integer(), Significant = integer(), Expected = numeric(), stringsAsFactors = FALSE))
+            }
+
             x <- .genesInNode(graph(object), whichGO)
 
             anno <- sapply(x, length)
