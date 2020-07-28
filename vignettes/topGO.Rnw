@@ -110,15 +110,17 @@ If you have already installed Bioconductor packages on your system then you can 
 below.
 
 <<eval = FALSE>>=
-source("http://bioconductor.org/biocLite.R")
-biocLite()
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install()
 @ 
 
 Once the core Bioconductor packages are installed, we can install the {\tt topGO} package by
 
 <<eval = FALSE>>=
-source("http://bioconductor.org/biocLite.R")
-biocLite("topGO")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("topGO")
 @ 
 
 \clearpage
@@ -346,9 +348,9 @@ plot(pValue.classic, pValue.elim, log = "xy", xlab = "log(p-value) classic", yla
 
 We can see in Figure~\ref{scatterClassicElim} that there are indeed differences between
 the two methods. Some GO terms found significant by the {\sf classic} method are less 
-significant in the {\sf elim}, as expected. However, we can visible identify a few 
+significant in the {\sf elim}, as expected. However, in some cases, we can visible identify a few
 GO terms for which the {\sf elim} $p$-value is less conservative then the {\sf classic} $p$-value.
-We can identify these terms and find the number of annotated genes:
+If such GO terms exist, we can identify them and find the number of annotated genes:
 
 
 <<>>=
@@ -358,11 +360,10 @@ cbind(termStat(sampleGOdata, sel.go),
       classic = pValue.classic[sel.go])
 @ 
 
-It is quite interesting that such cases appear. These $\Sexpr{length(sel.go)}$ GO terms are rather
-general (having many annotated genes) and their $p$-values are not significant at the $0.05$ level. 
-Also the difference in the significance is rather small, bar one term. Therefore these GO terms 
-would not appear in the list of top significant terms. More significant GO terms are less likely 
-to be influenced by this non monotonic behavior.
+It is quite interesting that such cases appear - the above table will not be empty.
+These GO terms are rather general (having many annotated genes) and their $p$-values are not significant 
+at the $0.05$ level. Therefore these GO terms would not appear in the list of top significant terms. 
+More significant GO terms are less likely to be influenced by this non monotonic behavior.
 
 
 Another insightful way of looking at the results of the analysis is to investigate how
